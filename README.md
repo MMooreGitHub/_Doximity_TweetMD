@@ -1,59 +1,79 @@
-# XCUITest Example
-
-This was a coding test/assignment that I passed recently. Please read reflections.md for the changes I made to the following scripts.
-
-# Automation Assignment for iOS
+# Coding Assignment
 
 We would like to thank you for taking the time to complete this assignment. We believe this is an effective way to allow you to show us your skills, on your own time, without the pressure of someone looking over your shoulder. Your code will be used to help us decide if we'd like to proceed with the interview process. Please understand that completing this assignment doesn't guarantee a job or follow up interviews. We will keep you posted either way.
-
-Note that while there is no time limit, it should take you 2-4 hours to complete this assignment.
 
 # TweetMD
 
 TweetMD is a little app we created exclusively for the take home assignment. It allows clinicians to stay up to date on the latest medical tweets! It uses the [Twitter API](https://dev.twitter.com/rest/public) to fetch the top 30 recent tweets about 'medicine' and displays them for your viewing pleasure (regardless of actual relevance to medicine...)
 
-We have already completed the desired functionality for TweetMD. Your job is to fix some broken code that failing tests should reveal, write a few more additional tests, and wire the project up to CI.
+We have already completed a big portion of TweetMD. It's coming along, but we need your help to polish it up!
+
+### Getting Set Up
+1. **FORK** this repository onto your personal GitLab account
+2. Clone your fork: `git clone git@gitlab.com:[your_gitlab_username]/ios-engineer-tweet-md.git`
+    Note: If you logged into GitLab with your GitHub account, you may need to add your [public SSH key](https://gitlab.com/profile/keys) for this to work.
+3. Create a branch named with the following format: `firstName_lastName_tweetMD`. Use this branch for all of your changes.
+4. Open TweetMD.xcworkspace
+
+### Submission Instructions
+1. In the settings of your fork, add `ios-assignment-review@doximity.com` as a developer.
+2. Complete all tasks on  ****YOUR**** fork and create a merge request from your `firstName_lastName_tweetMD` branch.
+3. On your merge request, add `ios-assignment-review@doximity.com` as an assignee.
+4. If you'd like to include comments to explain your thought process, feel free to do so within the code or in the description of your merge request.
+5. Please do not add any new third party libraries, but feel free to note in the comments if you were considering doing so.
+
+### What to Expect after you Submit
+Our team will be notified and we'll review the submission within 3 days. Among other things, we'll be checking for:
+* Ability to fully meet the requirements of each task as specified
+* Well-architected, robust, and maintainable code
+* Expertise with UIKit and AutoLayout
+* Ability to interpret and leverage existing code and documentation
+
+We know your time is valuable and appreciate you taking the time to complete this assignment!
 
 # Tasks
 
-### Task 1
-After opening the project in Xcode, run the existing tests using CMD + U. You'll notice several of them fail. Please determine the root cause of the test failure (it could be in the tests themselves or even in the code under test) and correct it so that all existing tests pass.
+As a heads up, for the final task, we will ask you to "code review" the initial TweetMD source code that was provided to you. So as you work on the tasks, it may be helpful to keep your eyes open for pieces of the project that you would improve on! 
 
-The unit tests are using the [Quick](https://github.com/Quick/Quick) testrunner and [Nimble](https://github.com/Quick/Nimble) assertions.
+### Task 1
+The cells on the tweet feed need a few UI updates. Use the design specs below to complete the following updates:
+  1. The top row of each cell contains 3 pieces of information: name, handle, and timestamp. The name and handle should stick to the left, and the timestamp should stick to the right. If there is not enough space to fit all three labels, first truncate the handle, then truncate the name. The timestamp should always display completely.
+  2. Update the cells so that their views are laid out consistently for various device sizes.
+  3. Each cell currently shows only one line of the tweet body. Update the layout so the tweet content wraps and the cells size themselves to fit the entire tweet content.
+
+<img src="screenshots/design-specs.png" />
 
 ### Task 2
-We'd like to test a few end-to-end scenarios and have included a UI testing target (`TweetMDUITests`) to facilitate that kind of testing.
-
-Please complete all specified scenarios in `TweedMDUITests.swift`. Attempt to make your test automation code as maintainable as possible. You are free and welcome to make any additions or alterations to the source code that would make your UI automation work easier, so long as all tests pass at the end.
-
-Some resources:
-* [XCTest UI Testing](https://developer.apple.com/documentation/xctest/user_interface_tests).
-* http://masilotti.com/ui-testing-cheat-sheet/
-* https://medium.com/the-ministry-of-testing/adding-accessibility-identifiers-to-an-ios-app-c8e09d9c20f3
-* https://developer.apple.com/documentation/uikit/uiaccessibilityidentification/1623132-accessibilityidentifier
-* https://alexilyenko.github.io/xcuitest-page-object/
+The images on the tweet feed are causing some lag while scrolling. Update the logic to eliminate the lag.
 
 ### Task 3
-Now that we have multiple test suites, let's start wiring up to CI so this project can be continuously tested.
-
-The first step towards that goal is a [Fastlane](https://fastlane.tools/) task that performs a build of the project and runs both test targets.
-
-Please implement a task that accomplishes this goal in `fastlane/Fastfile`.
-
-You should be able to test this task on your local machine via `bundle exec fastlane run_my_tests`.
+  1. The date label sometimes shows the incorrect time elapsed string. Please find and fix the issue.
+  2. Unit tests are a great way to avoid future issues with the time elapsed labels. We've included a test target that integrates the [Quick](https://github.com/Quick/Quick) and [Nimble](https://github.com/Quick/Nimble) test frameworks. Please write tests to ensure that the time elapsed method continues to work appropriately.
 
 ### Task 4
-Now that we have our fastlane task, please produce a [CircleCI 2.0](https://circleci.com/docs/2.0/testing-ios/) config file that would successfully execute the tests in CI.
+We want to highlight user mentions (e.g., @doximity) in the tweet body. The `Tweet` object has a `userMentions` property of type `[UserMention]`, but it is currently initialized to an empty array.
 
-Unfortunately, MacOS build machines are not available on the CircleCI free plan, so you won't be able to _really_ see if your config works. What you _can_ do, however, is validate your `.circleci/config.yml` using the CLI.
+1. Populate the `userMentions` array with any `UserMention`s that are associated with the given tweet
+2. Add functionality to change the text color of user mention names to `UIColor.actionBlue()` in the tweet body label
 
-`brew install circleci`
+### Task 5
+Currently, the button to 'favorite' a tweet exists, but it doesn't do anything. Implement the 'favorite' and 'unfavorite' functionality as follows:
+  * When tweets are not favorited:
+    1. The button should have background color `UIColor.actionBlue()`
+    2. The button text should be "Add to Favorites"
+    3. The corresponding row on the home feed should have background color `UIColor.white`
+  * When tweets are favorited:
+    1. The button should have background color `UIColor.darkGray`
+    2. The button text should be "Remove from Favorites"
+    3. The corresponding row on the home feed should have background color `UIColor.yellow`
 
-You can then validate your CircleCI config like so:
+*NOTE: Starred tweets do not need to persist across sessions. This means that when I kill / restart the app, my previous stars do not need to be saved.*
 
-`circleci config validate -c .circleci/config.yml`
+### Task 6
+One of our core values at Doximity is to leave the code better than you found it. 
 
-Please use the linked CircleCI documentation and anything you can find to complete this final portion of the assignment. CircleCI CLI validation of your config file should be successful prior to submission.
+For this task, please take a look at the TweetMD project as a whole (as if you were performing a code review on the entire code base) and list out any changes you would make to the code if it were your own project. We've included a file `Task6.md` in the project where you can add your comments.
 
-### Reflections
-If there are additional test scenarios you would implement, or any other improvement to the test automation infrastructure or CI setup that you would make if given time, you are welcome to add a description of the improvements you would make in Reflections.md. You are also encouraged to add as many comments as you deem necessary to your pull request.
+Some examples for suggested changes are performance improvements, code reorganization, bug fixes, simplification of code, anything! Be as specific as possible with your suggested changes/solutions. 
+
+You don't actually have to implement the changes you're suggesting (unless you have already or want to). We're mostly looking for the ability to identify possible optimizations and improvements in the code.
